@@ -11,6 +11,8 @@ from os.path import exists
 from errors import *
 import numpy as np
 import scipy.stats as st
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
 
 def get_alignment_handle(file_name):
     """
@@ -171,3 +173,29 @@ def get_hom_het_lists(coverage_dict, heterogamtic_ids):
             homogametic_coverage += coverage_dict[key]
     
     return homogametic_coverage, heterogametic_coverage
+
+def plot_coverage_hist(homogametic, heterogametic, output):
+    """
+    Plot the window coverages for the homogametic and heterogametic elements
+    """
+    # Make it look pretty 
+    plt.style.use('seaborn-colorblind')
+    fig, ax = plt.subplots()
+    plt.setp(ax.spines.values(), linewidth=2)
+    ax.xaxis.set_tick_params(width=2)
+    ax.yaxis.set_tick_params(width=2)
+    plt.rc('font', weight='bold')
+    plt.rc('xtick.major', size=5, pad=7)
+    plt.rc('xtick', labelsize=15)
+
+    # Make the plot
+    plt.hist(homogametic, label="Homogametic", bins=100, density=True)
+    plt.hist(heterogametic, label="Heterogametic", bins=100, density=True)
+    plt.ylabel("Density", fontweight='bold')
+    plt.xlabel("Coverage", fontweight='bold')
+    plt.legend()
+    plt.rcdefaults()
+    plt.savefig(output, bbox_inches="tight")
+
+def make_html_output():
+    pass

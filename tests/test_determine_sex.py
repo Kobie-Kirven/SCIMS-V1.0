@@ -115,7 +115,12 @@ class TestDetermineSex(unittest.TestCase):
             get_hom_het_lists(final, ["Not"])
 
 
-
+    def test_plot_coverage_hist(self):
+        np.random.seed(1)
+        x = 4 + np.random.normal(0, 1.5, 2000)
+        np.random.seed(1)
+        y = 4 + np.random.normal(4, 1.5, 2000)
+        plot_coverage_hist(x,y,"test.jpg")
 
 if __name__ == "__main__":
     unittest.main()
