@@ -43,3 +43,20 @@ optional arguments:
   --pre PREFIX       Prefix for the output files
   --scaffolds SCAFF  Scaffolds IDs to use in the analysis
 ```
+
+
+## Input Files
+### Scaffolds.txt
+Since most assemblies include scaffolds representing other DNA than simply genomic (ex. mitochondrial), it is necessary to define what scaffolds we are interested in using for our analysis. This can be specified with a ```scaffolds.txt`` file. This is a single-column text file where each row is a scaffold ID. Here is an example, 
+```
+NC_000001.11
+NC_000002.12
+NC_000003.12
+NC_000004.12
+NC_000005.10
+NC_000006.12
+NC_000007.14
+NC_000008.11
+...
+``` 
+Several pre-compiled scaffolds lists are already available in SCiMS, including ```GRCh38```. 

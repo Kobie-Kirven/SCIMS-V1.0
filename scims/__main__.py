@@ -12,6 +12,7 @@
 ###################
 import argparse
 from .determine_sex import *
+from pathlib import Path
 
 def scims():
     """
@@ -70,7 +71,10 @@ def scims():
     # -- Pipeline --#
     #################
 
-    scaffolds = read_scaffolds(args.scaff)
+    if args.scaff == "GRCh38":
+        scaffolds = read_scaffolds(f"{Path(__file__).parent}/static/GRCh38_scaffolds.txt")
+    else:
+        scaffolds = read_scaffolds(args.scaff)
 
     # Read in the alignment file
     handle = get_alignment_handle(args.input)

@@ -1,1 +1,2 @@
-include scims/scims_logo.png
+include scims/static/scims_logo.png
+include scims/static/GRCh38_scaffolds.txt

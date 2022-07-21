@@ -45,8 +45,8 @@ def get_alignment_handle(file_name):
 def read_scaffolds(file_prefix):
     try:
         with open(file_prefix) as fn:
-            return [line.strip("\n") for line in fn.readlines()]
-    
+            return [line.strip("\n") for line in fn.readlines() if (len(line.strip("\n")) > 1)]
+            
     except:
         raise ValueError("Something is wrong with the scaffolds file")
 
@@ -240,4 +240,4 @@ def create_results_directory(location):
     except:
         raise ValueError("Can't make results directory")
 
-    os.system(f"cp {Path(__file__).parent}/scims_logo.png {location}/images")
+    os.system(f"cp {Path(__file__).parent}/static/scims_logo.png {location}/images")
