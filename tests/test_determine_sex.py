@@ -1,7 +1,7 @@
 import unittest
 import sys
 import os 
-sys.path.append("/Users/kobiekirven/Desktop/scims/src")
+sys.path.append("/Users/kobiekirven/Desktop/scims/SCIMS/src")
 
 from determine_sex import *
 from errors import WrongFile
@@ -71,6 +71,9 @@ class TestDetermineSex(unittest.TestCase):
         with self.assertRaises(ValueError):
             add_to_coverage_dict(cov_array, 420, 82, 10)
 
+    def test_decompose_sam_flag(self):
+        self.assertEqual(decompose_sam_flag(25), ["PAIRED", "MUNMAP", "REVERSE"])
+        self.assertEqual(decompose_sam_flag(144), ["REVERSE", "READ2"])
 
 if __name__ == "__main__":
     unittest.main()

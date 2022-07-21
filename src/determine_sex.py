@@ -10,7 +10,6 @@ import pysam
 from os.path import exists
 from errors import *
 import numpy as np
-import math 
 
 def get_alignment_handle(file_name):
     """
@@ -105,3 +104,28 @@ def add_to_coverage_dict(coverage_array, start, align_len, window_size):
         raise ValueError("The window size is greater than the read length. Please increase the window size")
 
     return np.asarray(coverage_array)
+
+def decompose_sam_flag(flag):
+    """
+    Decompose SAM flag into its component parts
+    Parameters:
+        flag(int): Sam flag
+    Returns:
+        (list): Elements of sam flag
+    """
+    out_list = []
+    flag_list = ["PAIRED", "PROPER_PAIR", "UNMAP", "MUNMAP",
+                "REVERSE", "MREVERSE", "READ1", "READ2",
+                "SECONDARY", "QCFAIL", "DUP", "SUPPLEMENTARY"]
+
+    binary = str(f"{flag:b}"[::-1])
+    for i in range(len(binary)):
+        if binary[i] == "1":
+            out_list.append(flag_list[i])
+    return out_list
+
+def parse_align(handle):
+    """
+    Parse the SAM or BAM file to get the alignment information
+    """
+    pass
