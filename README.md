@@ -1,7 +1,8 @@
 
-<img src="static/scims_logo.png" width=30% align=right>
-===========================
-[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs) 
+<img src="static/scims_logo.png" width=25% align=right>
+====================
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 
 `SCiMS` is a tool for identifying the sex of an organism. 
 
