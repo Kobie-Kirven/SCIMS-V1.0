@@ -1,7 +1,7 @@
-<img src="static/scims_logo.png" align=right width="25%" style="padding-bottom: -20px;">
-
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+<img src="static/scims_logo.png" align=right width="25%">
+
 
  ``SCiMS``: **S**ex **C**alling from **M**etagenomic **S**equences        
 ====================
