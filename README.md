@@ -1,4 +1,4 @@
-<img src="static/scims_logo.png" align=right width="25%">
+<img src="static/scims_logo.png" align=right width="25%" style="padding-top: 15px;">
 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
