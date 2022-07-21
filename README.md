@@ -5,8 +5,8 @@
 <h1>
  <strong>SCiMS</strong>: <strong><u>S</u></strong>ex <strong><u>C</u></strong>alling from <strong><u>M</u></strong>etagenomic <strong><u>S</u></strong>equences   
  </h1>     
-====================
 
+ 
 #### `SCiMS` is a tool for identifying the sex of a host organism based on the alignment of metagenomic sequences. 
 
 ----
