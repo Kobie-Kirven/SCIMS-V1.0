@@ -75,5 +75,17 @@ class TestDetermineSex(unittest.TestCase):
         self.assertEqual(decompose_sam_flag(25), ["PAIRED", "MUNMAP", "REVERSE"])
         self.assertEqual(decompose_sam_flag(144), ["REVERSE", "READ2"])
 
+    
+    def test_check_alignment(self):
+        handle = pysam.AlignmentFile("../tests/test_data/one_sam_good.sam", "r", require_index=False)
+        recs = [h for h in handle]
+        align = check_alignment(recs[0])
+        self.assertEqual(align, ("NC_000913.3", 191, 100))
+
+        handle = pysam.AlignmentFile("../tests/test_data/one_bad_sam.sam", "r", require_index=False)
+        recs = [h for h in handle]
+        align = check_alignment(recs[0])
+        self.assertEqual(align, None)
+
 if __name__ == "__main__":
     unittest.main()

@@ -10,6 +10,7 @@ import pysam
 from os.path import exists
 from errors import *
 import numpy as np
+import scipy.stats as st
 
 def get_alignment_handle(file_name):
     """
@@ -124,8 +125,11 @@ def decompose_sam_flag(flag):
             out_list.append(flag_list[i])
     return out_list
 
-def parse_align(handle):
+def check_alignment(alignment):
     """
-    Parse the SAM or BAM file to get the alignment information
+    Check to make sure that the alignment passes the quality filters
     """
-    pass
+    bad = ["SECONDARY", "UNMAP", "MUNMAP", "SUPPLEMENTARY"]
+    if not any(item in bad for item in decompose_sam_flag(alignment.flag)):
+        return alignment.reference_name, alignment.reference_start, alignment.query_alignment_length
+
