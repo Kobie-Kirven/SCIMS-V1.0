@@ -1,13 +1,14 @@
-
-## ``SCiMS``: **S**ex **C**alling from **M**etagenomic **S**equences [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 <img src="static/scims_logo.png" width=25% align=right>
 
-`SCiMS` is a tool for identifying the sex of a host organism based on the alignment of metagenomic sequences. 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+## ``SCiMS``: **S**ex **C**alling from **M**etagenomic **S**equences        
+
+#### `SCiMS` is a tool for identifying the sex of a host organism based on the alignment of metagenomic sequences. 
 
 ----
 ## Installation 
 
-`SCiMs` can be easily installed with the pip package manager
+`SCiMS` can be easily installed with the pip package manager
 
 ```
 pip3 install git+https://github.com/Kobie-Kirven/SCIMS-V1.0
