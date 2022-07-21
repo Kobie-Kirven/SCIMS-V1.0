@@ -41,6 +41,14 @@ def get_alignment_handle(file_name):
                 raise WrongFile("This file does not look like a BAM file")
         return handle
 
+def read_scaffolds(file_prefix):
+    try:
+        with open(file_prefix) as fn:
+            return [line.strip("\n") for line in fn.readlines()]
+    
+    except:
+        raise ValueError("Something is wrong with the scaffolds file")
+
 def chrom_len_from_sam(handle):
     """
     Get the lengths of the chromosomes from the SAM header
@@ -76,13 +84,14 @@ def build_chrom_coverage_array(length, window_size=10000):
     
     return np.zeros(length // window_size)
 
-def build_chrom_coverage_dict(chrom_lengths_dict, window_size=10000):
+def build_chrom_coverage_dict(chrom_lengths_dict, scaffolds, window_size=10000):
     """
     Build a dictionary to hold the coverage information
     """
     chrom_dict = {}
     for key in chrom_lengths_dict:
-        chrom_dict[key] = build_chrom_coverage_array(chrom_lengths_dict[key], window_size)
+        if key in scaffolds:
+            chrom_dict[key] = build_chrom_coverage_array(chrom_lengths_dict[key], window_size)
     return chrom_dict
 
 
@@ -155,9 +164,10 @@ def get_chrom_windows_coverage(handle, chrom_dict, window_size):
 
     """
     for rec in handle:
-        align = check_alignment(rec)
-        if align:
-            chrom_dict[align[0]] = add_to_coverage_dict(chrom_dict[align[0]],align[1], align[2], window_size)
+        if rec.reference_name in chrom_dict:
+            align = check_alignment(rec)
+            if align:
+                chrom_dict[align[0]] = add_to_coverage_dict(chrom_dict[align[0]],align[1], align[2], window_size)
     return chrom_dict
 
 def get_hom_het_lists(coverage_dict, heterogamtic_ids):
@@ -173,9 +183,9 @@ def get_hom_het_lists(coverage_dict, heterogamtic_ids):
 
     for key in coverage_dict:
         if key in heterogamtic_ids:
-            heterogametic_coverage += coverage_dict[key]
+            heterogametic_coverage += list(coverage_dict[key])
         else:
-            homogametic_coverage += coverage_dict[key]
+            homogametic_coverage += list(coverage_dict[key])
     
     return homogametic_coverage, heterogametic_coverage
 
@@ -220,10 +230,10 @@ def make_html_output(output, p_value):
 
 def create_results_directory(location):
     try:
-        os.mkdir(location + "/scims_results")
-        os.mkdir(location + "/scims_results/images")
+        os.mkdir(location)
+        os.mkdir(location + "/images")
     
     except:
         raise ValueError("Can't make results directory")
 
-    os.system(f"cp ../static/scims_logo.png {location}/scims_results/images")
+    os.system(f"cp ../static/scims_logo.png {location}/images")
