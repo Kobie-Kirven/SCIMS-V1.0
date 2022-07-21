@@ -21,7 +21,7 @@ To confirm that the instillation was successful, run:
 ```
 scims -h
 ```
----
+
 ## Usage
 `SCiMS` can be used on any alignment data, regardless of the platform used for sequencing or the aligner that generated the alignment file. 
 
