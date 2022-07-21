@@ -152,3 +152,22 @@ def get_chrom_windows_coverage(handle, chrom_dict, window_size):
         if align:
             chrom_dict[align[0]] = add_to_coverage_dict(chrom_dict[align[0]],align[1], align[2], window_size)
     return chrom_dict
+
+def get_hom_het_lists(coverage_dict, heterogamtic_ids):
+    """
+    Get the window coverages of the homogametic and heterogamtic elements 
+    """
+    homogametic_coverage = []
+    heterogametic_coverage = []
+
+    for id in heterogamtic_ids:
+        if id not in coverage_dict:
+            raise ValueError(f"The heterogametic ID {id} is not valid")
+
+    for key in coverage_dict:
+        if key in heterogamtic_ids:
+            heterogametic_coverage += coverage_dict[key]
+        else:
+            homogametic_coverage += coverage_dict[key]
+    
+    return homogametic_coverage, heterogametic_coverage

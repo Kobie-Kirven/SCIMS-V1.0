@@ -105,5 +105,17 @@ class TestDetermineSex(unittest.TestCase):
         final["NC_000913.3"][0] = 100.
         self.assertEqual(list(get_chrom_windows_coverage(handle,test_dict, 1000)["NC_000913.3"]), final["NC_000913.3"])
 
+    def test_get_hom_het_lists(self):
+        final = {"Chrom1":[0,4,5,6], "Chrom2":[7,8,9]}
+        test = get_hom_het_lists(final, ["Chrom2"])
+        self.assertEqual(list(test[0]), [0,4,5,6])
+        self.assertEqual(list(test[1]), [7,8,9] )
+
+        with self.assertRaises(ValueError):
+            get_hom_het_lists(final, ["Not"])
+
+
+
+
 if __name__ == "__main__":
     unittest.main()
