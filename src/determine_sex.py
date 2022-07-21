@@ -69,16 +69,13 @@ def build_chrom_coverage_array(length, window_size=10000):
     
     return np.zeros(length // window_size)
 
-def build_chrom_coverage_dict(chrom_names, lengths, window_size=10000):
+def build_chrom_coverage_dict(chrom_lengths_dict, window_size=10000):
     """
     Build a dictionary to hold the coverage information
     """
-    if len(chrom_names) != len(lengths):
-        raise ValueError("The number of chromosomes is not equal to the number of lengths")
-
     chrom_dict = {}
-    for i in range(len(chrom_names)):
-        chrom_dict[chrom_names[i]] = build_chrom_coverage_array(lengths[i], window_size)
+    for key in chrom_lengths_dict:
+        chrom_dict[key] = build_chrom_coverage_array(chrom_lengths_dict[key], window_size)
     return chrom_dict
 
 
@@ -133,3 +130,25 @@ def check_alignment(alignment):
     if not any(item in bad for item in decompose_sam_flag(alignment.flag)):
         return alignment.reference_name, alignment.reference_start, alignment.query_alignment_length
 
+def get_ks_stat(array1, array2):
+    """
+    Compute the two-sample Kolmogorov-Smirnov test between two arrays
+    """
+    return st.ks_2samp(array1, array2)
+
+
+def get_chrom_windows_coverage(handle, chrom_dict, window_size):
+    """
+    Get the coverage of each window across each chromosome
+
+    Parameters:
+        - handle(pysam handle): Handle of SAM or BAM file
+        - chrom_dict(dict): output from  build_chrom_coverage_dict
+        - window_size(int): size of the window to use
+
+    """
+    for rec in handle:
+        align = check_alignment(rec)
+        if align:
+            chrom_dict[align[0]] = add_to_coverage_dict(chrom_dict[align[0]],align[1], align[2], window_size)
+    return chrom_dict

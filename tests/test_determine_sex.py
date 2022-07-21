@@ -39,11 +39,8 @@ class TestDetermineSex(unittest.TestCase):
     
     def test_build_chrom_coverage_dict(self):
         test_dict = {"chrom1":np.asarray([0.,0.,0.]), "chrom2":np.asarray([0.,0.,0.,0.])}
-        method_dict = build_chrom_coverage_dict(("chrom1","chrom2"), (35, 43),10)
+        method_dict = build_chrom_coverage_dict({"chrom1":35,"chrom2":43},10)
         self.assertEqual(str(method_dict), str(test_dict))
-        
-        with self.assertRaises(ValueError):
-            method_dict = build_chrom_coverage_dict(("chrom2"), (35, 43),10)
 
     
     def test_add_to_coverage_dict(self):
@@ -86,6 +83,27 @@ class TestDetermineSex(unittest.TestCase):
         recs = [h for h in handle]
         align = check_alignment(recs[0])
         self.assertEqual(align, None)
+
+    def test_get_ks_stat(self):
+        stat = get_ks_stat([1,5,3,4,5,3,3,4], [20,35,23,34,35,33,23,24])
+        self.assertEqual(stat[0], 1.0)
+        self.assertEqual(stat[1], 0.00015540015540015537)
+
+    def test_get_chrom_windows_coverage(self):
+        handle = pysam.AlignmentFile("../tests/test_data/one_sam_good.sam", "r", require_index=False)
+        zeros = [0.]*4641
+        test_dict  = build_chrom_coverage_dict({"NC_000913.3":4641652}, 1000)
+        final = {"NC_000913.3":zeros}
+        final["NC_000913.3"][0] = 100.
+        self.assertEqual(list(get_chrom_windows_coverage(handle,test_dict, 1000)["NC_000913.3"]), final["NC_000913.3"])
+
+        handle = pysam.AlignmentFile("../tests/test_data/sam_2.sam", "r", require_index=False)
+        zeros = [0.]*4641
+        test_dict  = build_chrom_coverage_dict({"NC_000913.3":4641652}, 1000)
+        final = {"NC_000913.3":zeros}
+        final["NC_000913.3"][1] = 100.
+        final["NC_000913.3"][0] = 100.
+        self.assertEqual(list(get_chrom_windows_coverage(handle,test_dict, 1000)["NC_000913.3"]), final["NC_000913.3"])
 
 if __name__ == "__main__":
     unittest.main()
