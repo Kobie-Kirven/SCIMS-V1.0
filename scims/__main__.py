@@ -11,7 +11,7 @@
 # -- Arguments -- #
 ###################
 import argparse
-from determine_sex import *
+from .determine_sex import *
 
 def scims():
     """
@@ -99,9 +99,6 @@ def scims():
     # Print Messages
     print(f"Results are in {args.out_dir}/{args.prefix}")
     print("Thank you for using SCiMS!")
-
-if __name__ == "__main__":
-    scims()
 
 
 

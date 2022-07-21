@@ -12,12 +12,13 @@
 #################
 import pysam 
 from os.path import exists
-from errors import *
+from .errors import *
 import numpy as np
 import scipy.stats as st
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import os
+from pathlib import Path
 
 def get_alignment_handle(file_name):
     """
@@ -163,11 +164,14 @@ def get_chrom_windows_coverage(handle, chrom_dict, window_size):
         - window_size(int): size of the window to use
 
     """
+    total = 0
     for rec in handle:
         if rec.reference_name in chrom_dict:
             align = check_alignment(rec)
+            total += 1
             if align:
                 chrom_dict[align[0]] = add_to_coverage_dict(chrom_dict[align[0]],align[1], align[2], window_size)
+    print(total)
     return chrom_dict
 
 def get_hom_het_lists(coverage_dict, heterogamtic_ids):
@@ -236,4 +240,4 @@ def create_results_directory(location):
     except:
         raise ValueError("Can't make results directory")
 
-    os.system(f"cp ../static/scims_logo.png {location}/images")
+    os.system(f"cp {Path(__file__).parent}/scims_logo.png {location}/images")
