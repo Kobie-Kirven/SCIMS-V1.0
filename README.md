@@ -2,7 +2,9 @@
 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
  ``SCiMS``: **S**ex **C**alling from **M**etagenomic **S**equences        
+====================
 
 #### `SCiMS` is a tool for identifying the sex of a host organism based on the alignment of metagenomic sequences. 
 
