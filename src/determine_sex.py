@@ -1,6 +1,10 @@
 #######################################################
 # SCiMS: Sex calling for Metagenomic Sequences
 #
+# Author: Kobie Kirven 
+#
+# Davenport Lab
+# The Pennsylvania State University
 #######################################################
 
 #################
@@ -13,6 +17,7 @@ import numpy as np
 import scipy.stats as st
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
+import os
 
 def get_alignment_handle(file_name):
     """
@@ -197,5 +202,28 @@ def plot_coverage_hist(homogametic, heterogametic, output):
     plt.rcdefaults()
     plt.savefig(output, bbox_inches="tight")
 
-def make_html_output():
-    pass
+def make_html_output(output, p_value):
+    """
+    Create the HTML for the report
+    """
+    with open(output + ".html", "w") as fn:
+        fn.write('<img src="images/scims_logo.png" width="100">')
+        fn.write('<h2>Sex Determination:</h2>')
+        if float(p_value) < 0.05:
+            sig = "is"
+        else:
+            sig = "is not"
+        fn.write(f'<strong>Conclusion:</strong> Homogametic coverage <strong>{sig} significantly different</strong> to heterogametic coverage')
+        fn.write(f'<p><strong>P-Value: {p_value}</strong></p>')
+        fn.write('<h2>Coverage </h2>')
+        fn.write('<img src="images/hist.jpg">')
+
+def create_results_directory(location):
+    try:
+        os.mkdir(location + "/scims_results")
+        os.mkdir(location + "/scims_results/images")
+    
+    except:
+        raise ValueError("Can't make results directory")
+
+    os.system(f"cp ../static/scims_logo.png {location}/scims_results/images")

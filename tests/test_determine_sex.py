@@ -122,5 +122,9 @@ class TestDetermineSex(unittest.TestCase):
         y = 4 + np.random.normal(4, 1.5, 2000)
         plot_coverage_hist(x,y,"test.jpg")
 
+    def test_create_results_directory(self):
+        create_results_directory("/Users/kobiekirven/Desktop")
+        make_html_output("/Users/kobiekirven/Desktop/scims_results/report", 0.05)
+
 if __name__ == "__main__":
     unittest.main()
