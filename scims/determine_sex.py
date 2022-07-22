@@ -216,8 +216,8 @@ def plot_coverage_hist(homogametic, heterogametic, output):
     plt.rc('xtick', labelsize=15)
 
     # Make the plot
-    plt.hist(homogametic, label="Homogametic", bins=100, density=True)
-    plt.hist(heterogametic, label="Heterogametic", bins=100, density=True)
+    plt.hist(homogametic, label="Homogametic", bins=20, density=True)
+    plt.hist(heterogametic, label="Heterogametic", bins=20, density=True)
     plt.ylabel("Density", fontweight='bold')
     plt.xlabel("Coverage", fontweight='bold')
     plt.legend()

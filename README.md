@@ -60,3 +60,9 @@ NC_000008.11
 ...
 ``` 
 Several pre-compiled scaffolds lists are already available in SCiMS, including ```GRCh38```. 
+
+## Output Files
+
+The main output of the SCiMS program is an report like the one shown below.
+
+<img src="static/scims_report_output.png">

@@ -104,9 +104,13 @@ def scims():
     make_html_output(f"{args.out_dir}/{args.prefix}/{args.prefix}", p_value)
     plot_coverage_hist(hom, het, f"{args.out_dir}/{args.prefix}/images/hist.jpg")
 
+    if p_value < 0.05:
+        print(f"homogametic does not equal heterogametic: p-value={p_value}")
 
+    else:
+        print(f"homogametic equals heterogametic: p-value={p_value}")
     # Print Messages
-    print(f"Results are in {args.out_dir}/{args.prefix}")
+    print(f"\nResults are in {args.out_dir}/{args.prefix}")
     print("Thank you for using SCiMS!")
 
 
