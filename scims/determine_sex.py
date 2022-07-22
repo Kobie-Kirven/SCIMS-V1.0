@@ -87,7 +87,7 @@ def build_chrom_coverage_array(length, window_size=10000):
         sys.exit(1)
     
     if length <= window_size:
-        print("Print: Window size is too large, consider going smaller")
+        print("Error: Window size is too large, consider going smaller")
         sys.exit(1)
     
     return np.zeros(length // window_size)
