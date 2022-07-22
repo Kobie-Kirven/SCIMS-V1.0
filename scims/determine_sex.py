@@ -32,7 +32,7 @@ def get_alignment_handle(file_name):
         - handle(pysam object) 
     """
     if not exists(file_name):
-        print("The input file does not exist")
+        print("Error: The alignment file does not exist")
         sys.exit(1)
     else:
         try:
