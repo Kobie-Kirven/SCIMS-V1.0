@@ -190,7 +190,7 @@ def get_hom_het_lists(coverage_dict, heterogamtic_ids):
 
     for id in heterogamtic_ids:
         if id not in coverage_dict:
-            print(f"The heterogametic ID {id} is not valid")
+            print(f"Error: The heterogametic ID {id} is not valid")
             sys.exit(1)
 
     for key in coverage_dict:
