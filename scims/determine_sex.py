@@ -19,6 +19,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import os
 from pathlib import Path
+import sys
 
 def get_alignment_handle(file_name):
     """
@@ -31,7 +32,8 @@ def get_alignment_handle(file_name):
         - handle(pysam object) 
     """
     if not exists(file_name):
-        raise DoesNotExist("The input file does not exist")
+        print("The input file does not exist")
+        sys.exit(1)
     else:
         try:
             handle = pysam.AlignmentFile(file_name, "rb", require_index=False)
@@ -39,7 +41,8 @@ def get_alignment_handle(file_name):
             try:
                 handle = pysam.AlignmentFile(file_name, "r", require_index=False)
             finally:
-                raise WrongFile("This file does not look like a BAM file")
+                print("Error: This file does not look like a BAM file!")
+                sys.exit(1)
         return handle
 
 def read_scaffolds(file_prefix):
@@ -48,7 +51,8 @@ def read_scaffolds(file_prefix):
             return [line.strip("\n") for line in fn.readlines() if (len(line.strip("\n")) > 1)]
             
     except:
-        raise ValueError("Something is wrong with the scaffolds file")
+        print("Error: Something is wrong with the scaffolds file")
+        sys.exit(1)
 
 def chrom_len_from_sam(handle):
     """
@@ -75,13 +79,16 @@ def build_chrom_coverage_array(length, window_size=10000):
         - window_size(int): window size for the coverage
     """
     if type(window_size) != int:
-        raise ValueError("Window size needs to be an integer")
+        print("Error: Window size needs to be an integer!")
+        sys.exit(1)
     
     elif window_size <= 0:
-        raise ValueError("You can not have a window size of 0")
+        print("Error: You can not have a window size of 0")
+        sys.exit(1)
     
     if length <= window_size:
-        raise ValueError("Window size is too large, consider going smaller")
+        print("Print: Window size is too large, consider going smaller")
+        sys.exit(1)
     
     return np.zeros(length // window_size)
 
@@ -116,7 +123,8 @@ def add_to_coverage_dict(coverage_array, start, align_len, window_size):
                 coverage_array[int(index)] +=  1
 
     elif second > (index + 1):
-        raise ValueError("The window size is greater than the read length. Please increase the window size")
+        print("Exit: The window size is greater than the read length. Please increase the window size")
+        sys.exit(1)
 
     return np.asarray(coverage_array)
 
@@ -171,7 +179,6 @@ def get_chrom_windows_coverage(handle, chrom_dict, window_size):
             total += 1
             if align:
                 chrom_dict[align[0]] = add_to_coverage_dict(chrom_dict[align[0]],align[1], align[2], window_size)
-    print(total)
     return chrom_dict
 
 def get_hom_het_lists(coverage_dict, heterogamtic_ids):
@@ -183,7 +190,8 @@ def get_hom_het_lists(coverage_dict, heterogamtic_ids):
 
     for id in heterogamtic_ids:
         if id not in coverage_dict:
-            raise ValueError(f"The heterogametic ID {id} is not valid")
+            print(f"The heterogametic ID {id} is not valid")
+            sys.exit(1)
 
     for key in coverage_dict:
         if key in heterogamtic_ids:
@@ -238,6 +246,7 @@ def create_results_directory(location):
         os.mkdir(location + "/images")
     
     except:
-        raise ValueError("Can't make results directory")
+        print("Error: Can't make results directory")
+        sys.exit(1)
 
     os.system(f"cp {Path(__file__).parent}/static/scims_logo.png {location}/images")

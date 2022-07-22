@@ -13,6 +13,7 @@
 import argparse
 from .determine_sex import *
 from pathlib import Path
+import sys 
 
 def scims():
     """
@@ -49,7 +50,7 @@ def scims():
     parser.add_argument(
         "--dir",
         dest="out_dir",
-        help="Ouput directory to hold the restuls",
+        help="Ouput directory to hold the results",
     )
 
     parser.add_argument(
@@ -70,11 +71,15 @@ def scims():
     #################
     # -- Pipeline --#
     #################
-
+    print("\n")
     if args.scaff == "GRCh38":
         scaffolds = read_scaffolds(f"{Path(__file__).parent}/static/GRCh38_scaffolds.txt")
     else:
-        scaffolds = read_scaffolds(args.scaff)
+        try:
+            scaffolds = read_scaffolds(args.scaff)
+        except:
+            print("Error: The scaffolds file does not exist or is invalid!")
+            sys.exit(1)
 
     # Read in the alignment file
     handle = get_alignment_handle(args.input)
