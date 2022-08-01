@@ -7,8 +7,12 @@ Welcome to SCiMS-V1.0's documentation!
 ======================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :caption: Documentation
+   :maxdepth: -1
+
+   about
+   installation
+   arguments
 
 
 
