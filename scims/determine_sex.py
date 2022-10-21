@@ -108,24 +108,14 @@ def add_to_coverage_dict(coverage_array, start, align_len, window_size):
     Add the number of nucleotides that cover a specific region
     """
     coverage_array = list(coverage_array)
+
+    # Get the index of the window to add the coverage to
     index = start // window_size
-    second = (start + align_len) // window_size
 
-    if second == index:
-        coverage_array[int(index)] += align_len
+    # Add the coverage to the window
+    coverage_array[int(index)] += align_len
 
-    elif (second == index + 1) and second < len(coverage_array):
-        for i in range(0, align_len):
-            new_index = ((start + i) // window_size)
-            if new_index > index:
-                coverage_array[int(second)] += 1
-            else:
-                coverage_array[int(index)] +=  1
-
-    elif second > (index + 1):
-        print("Exit: The window size is greater than the read length. Please increase the window size")
-        sys.exit(1)
-
+    # Return the updated coverage array
     return np.asarray(coverage_array)
 
 def decompose_sam_flag(flag):
