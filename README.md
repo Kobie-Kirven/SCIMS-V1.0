@@ -57,6 +57,16 @@ NC_000008.11
 ...
 ``` 
 
+### .idxstats files
+A .idxstats file can easily be created with samtools. If you have a .bam file of interest, fun the following commands to generate the .idxstats file:
+
+```shell
+samtools index <bam_file>
+```
+
+```shell
+samtools idxstats <bam_file> > <prefix>.idxstats
+```
 
 ## Example run
 Example files can be found in the ```test_data`` folder
@@ -79,17 +89,6 @@ Rx: 0.599
 95% CI: 0.537 0.66
 Ry: 0.517
 95% CI: 0.464 0.57
-```
-
-## Creating a .idxstats file
-A .idxstats file can easily be created with samtools. If you have a .bam file of interest, fun the following commands to generate the .idxstats file:
-
-```shell
-samtools index <bam_file>
-```
-
-```shell
-samtools idxstats <bam_file> > <prefix>.idxstats
 ```
 
 
