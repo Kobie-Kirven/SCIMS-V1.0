@@ -56,10 +56,11 @@ NC_000007.14
 NC_000008.11
 ...
 ``` 
-Several pre-compiled scaffolds lists are already available in SCiMS, including ```GRCh38```. 
 
 
 ## Example run
+Example files can be found in the ```test_data`` folder
+
 ```scims --i male.idxstats --s scafoolds.txt --X-id NC_000023.11 --Y-id NC_000024.10```
 
 output:
@@ -78,6 +79,17 @@ Rx: 0.599
 95% CI: 0.537 0.66
 Ry: 0.517
 95% CI: 0.464 0.57
+```
+
+## Creating a .idxstats file
+A .idxstats file can easily be created with samtools. If you have a .bam file of interest, fun the following commands to generate the .idxstats file:
+
+```shell
+samtools index <bam_file>
+```
+
+```shell
+samtools idxstats <bam_file> > <prefix>.idxstats
 ```
 
 
