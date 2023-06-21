@@ -14,8 +14,8 @@ setuptools.setup(
     version="0.01",
     packages=["scims", "scims"],
     include_package_data = True,
-    entry_points={"console_scripts": ["scims=scims.__main__:scims",],},
+    entry_points={"console_scripts": ["scims=scims.__main__:main",],},
     description="SCiMS: Sex Calling for Metagenomic Sequences",
-    install_requires=["setuptools", "biopython", "pandas", "pysam", "matplotlib", "scipy", "numpy"],
+    install_requires=["setuptools", "biopython", "pandas", "matplotlib", "scipy", "numpy"],
     python_requires=">=3.6",
 )
