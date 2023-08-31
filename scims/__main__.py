@@ -11,107 +11,79 @@
 # -- Arguments -- #
 ###################
 import argparse
-from .determine_sex import *
-from pathlib import Path
-import sys 
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
 
-def scims():
-    """
-    Main function for the SCiMS program
-    """
+# Function to calculate Rt values
+def calculate_Rt(idxstats, total_ref, total_map):
+    return (idxstats[:, 1] / total_map) / (idxstats[:, 0] / total_ref)
 
-    parser = argparse.ArgumentParser(
-        description="Sex Calling from Metagenomic Sequences"
-    )
-
-    parser.add_argument("-v", "--version", action="version", version="scims 0.0.1")
-
-    ######################################
-    # determine-sex
-    ######################################
-    parser.add_argument(
-        "--i",
-        dest="input",
-        help="Input SAM or BAM file",
-    )
-
-    parser.add_argument(
-        "--x",
-        dest="het",
-        help="ID of heterogametic sex chromosome (ex. X)",
-    )
-
-    parser.add_argument(
-        "--w",
-        dest="window",
-        help="Window size for the coverage calculation (default=10,000)",
-    )
-
-    parser.add_argument(
-        "--dir",
-        dest="out_dir",
-        help="Ouput directory to hold the results",
-    )
-
-    parser.add_argument(
-        "--pre",
-        dest="prefix",
-        help="Prefix for the output files",
-    )
-    parser.add_argument(
-        "--scaffolds",
-        dest="scaff",
-        help="Scaffolds IDs to use in the analysis",
-    )
-
-
-
+def main():
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description='Sex Assignment Script')
+    parser.add_argument('--i',dest= "idxtats", type=str, help='idxstats file')
+    parser.add_argument('--s',dest="scaffold_ids_file", type=str, help='File containing scaffold IDs of interest')
+    parser.add_argument('--X-id',dest="x_id", type=str, help='Scaffold ID for X chromosome')
+    parser.add_argument('--Y-id',dest="y_id",type=str, help='Scaffold ID for Y chromosome')
     args = parser.parse_args()
 
-    #################
-    # -- Pipeline --#
-    #################
-    print("\n")
-    if args.scaff == "GRCh38":
-        scaffolds = read_scaffolds(f"{Path(__file__).parent}/static/GRCh38_scaffolds.txt")
-    else:
-        try:
-            scaffolds = read_scaffolds(args.scaff)
-        except:
-            print("Error: The scaffolds file does not exist or is invalid!")
-            sys.exit(1)
+    # Read scaffold IDs from file
+    with open(args.scaffold_ids_file, 'r') as file:
+        scaffold_ids = file.read().splitlines()
 
-    # Read in the alignment file
-    handle = get_alignment_handle(args.input)
+    # Read idxstats file
+    idxstats = pd.read_table(args.idxtats, header=None, index_col=0)
+    idxstats = idxstats.loc[scaffold_ids]
 
-    # Get the chromosome lengths
-    chrom_lengths = chrom_len_from_sam(handle)
+    c1 = np.array(idxstats.iloc[:, 0], dtype=float)
+    c2 = np.array(idxstats.iloc[:, 1], dtype=float)
+    total_ref = np.sum(c1)
+    total_map = np.sum(c2)
 
-    #Initiate chromosome coverage dict
-    chrom_cov_dict = build_chrom_coverage_dict(chrom_lengths,scaffolds,  int(args.window))
+    # Fit linear regression model
+    X = sm.add_constant(c2)
+    LM = sm.OLS(c1, X).fit()
+    # print(LM.summary())
 
-    # Get the coverages
-    coverages = get_chrom_windows_coverage(handle, chrom_cov_dict, int(args.window))
+    print("=================================================")
+    print("""
+                                                    
+    _|_|_|    _|_|_|  _|_|_|  _|      _|    _|_|_|  
+    _|        _|          _|    _|_|  _|_|  _|        
+    _|_|    _|          _|    _|  _|  _|    _|_|    
+        _|  _|          _|    _|      _|        _|  
+    _|_|_|      _|_|_|  _|_|_|  _|      _|  _|_|_|    
+    """)
+    print("=================================================")
 
-    # Split coverages into homogametic and heterogametic
-    hom, het = get_hom_het_lists(coverages, args.het.split(","))
+    # Calculate Rt values
+    Rt_values = calculate_Rt(idxstats.values, total_ref, total_map)
 
-    # Get the p-value
-    p_value = get_ks_stat(hom, het)[1]
+    # Calculate Rx
+    copy = list(set(list(np.delete(Rt_values, scaffold_ids.index(args.x_id))) + list(np.delete(Rt_values, scaffold_ids.index(args.y_id)))))
+    tot = Rt_values[scaffold_ids.index(args.x_id)] / copy
+    Rx = np.mean(tot)
+    print("Rx:", np.round(Rx, 3))
 
-    # Create the outputs
-    create_results_directory(f"{args.out_dir}/{args.prefix}" )
-    make_html_output(f"{args.out_dir}/{args.prefix}/{args.prefix}", p_value)
-    plot_coverage_hist(hom, het, f"{args.out_dir}/{args.prefix}/images/hist.jpg")
+    # Calculate confidence interval for Rx
+    conf_interval = (np.std(tot) / np.sqrt(22)) * 1.96
+    CI1 = Rx - conf_interval
+    CI2 = Rx + conf_interval
+    print("95% CI:", np.round(CI1, 3), np.round(CI2, 3))
 
-    if p_value < 0.05:
-        print(f"homogametic does not equal heterogametic: p-value={p_value}")
+    # Calculate Ry
+    tot = Rt_values[scaffold_ids.index(args.y_id)] / copy
+    Ry = np.mean(tot)
+    print("Ry:", np.round(Ry, 3))
 
-    else:
-        print(f"homogametic equals heterogametic: p-value={p_value}")
-    # Print Messages
-    print(f"\nResults are in {args.out_dir}/{args.prefix}")
-    print("Thank you for using SCiMS!")
+    # Calculate confidence interval for Ry
+    conf_interval = (np.std(tot) / np.sqrt(22)) * 1.96
+    CI1 = Ry - conf_interval
+    CI2 = Ry + conf_interval
+    print("95% CI:", np.round(CI1, 3), np.round(CI2, 3))
+
+
 
 
 

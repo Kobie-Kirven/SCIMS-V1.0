@@ -27,21 +27,18 @@ scims -h
 `SCiMS` can be used on any alignment data, regardless of the platform used for sequencing or the aligner that generated the alignment file. 
 
 ```
-usage: scims [-h] [-v] [--i INPUT] [--x HET] [--w WINDOW] [--dir OUT_DIR]
-             [--pre PREFIX] [--scaffolds SCAFF]
+usage: scims [-h] [--i IDXTATS] [--s SCAFFOLD_IDS_FILE] [--X-id X_ID]
+                   [--Y-id Y_ID]
 
-Sex Calling from Metagenomic Sequences
+Sex Assignment Script
 
-optional arguments:
-  -h, --help         show this help message and exit
-  -v, --version      show program's version number and exit
-  --i INPUT          Input SAM or BAM file
-  --x HET            ID of heterogametic sex chromosome (ex. X)
-  --w WINDOW         Window size for the coverage calculation
-                     (default=10,000)
-  --dir OUT_DIR      Ouput directory to hold the restuls
-  --pre PREFIX       Prefix for the output files
-  --scaffolds SCAFF  Scaffolds IDs to use in the analysis
+options:
+  -h, --help            show this help message and exit
+  --i IDXTATS           idxstats file
+  --s SCAFFOLD_IDS_FILE
+                        File containing scaffold IDs of interest
+  --X-id X_ID           Scaffold ID for X chromosome
+  --Y-id Y_ID           Scaffold ID for Y chromosome
 ```
 
 
@@ -59,10 +56,39 @@ NC_000007.14
 NC_000008.11
 ...
 ``` 
-Several pre-compiled scaffolds lists are already available in SCiMS, including ```GRCh38```. 
 
-## Output Files
+### .idxstats files
+A .idxstats file can easily be created with samtools. If you have a .bam file of interest, fun the following commands to generate the .idxstats file:
 
-The main output of the SCiMS program is an report like the one shown below.
+```shell
+samtools index <bam_file>
+```
 
-<img src="static/scims_report_output.png">
+```shell
+samtools idxstats <bam_file> > <prefix>.idxstats
+```
+
+## Example run
+Example files can be found in the ```test_data`` folder
+
+```scims --i male.idxstats --s scafoolds.txt --X-id NC_000023.11 --Y-id NC_000024.10```
+
+output:
+```
+=================================================
+
+                                                  
+  _|_|_|    _|_|_|  _|_|_|  _|      _|    _|_|_|  
+_|        _|          _|    _|_|  _|_|  _|        
+  _|_|    _|          _|    _|  _|  _|    _|_|    
+      _|  _|          _|    _|      _|        _|  
+_|_|_|      _|_|_|  _|_|_|  _|      _|  _|_|_|    
+
+=================================================
+Rx: 0.599
+95% CI: 0.537 0.66
+Ry: 0.517
+95% CI: 0.464 0.57
+```
+
+
