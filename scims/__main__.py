@@ -17,7 +17,12 @@ import statsmodels.api as sm
 
 # Function to calculate Rt values
 def calculate_Rt(idxstats, total_ref, total_map):
-    return (idxstats[:, 1] / total_map) / (idxstats[:, 0] / total_ref)
+    rts = []
+    for i in range(len(idxstats)):
+        rts.append((idxstats[i][1] / total_map) / (idxstats[i][0] / total_ref))
+    return np.array(rts)
+    # print((idxstats[:, 1] / total_map) / (idxstats[:, 0] / total_ref))
+    # return (idxstats[:, 1] / total_map) / (idxstats[:, 0] / total_ref)
 
 def main():
     # Parse command line arguments
@@ -61,16 +66,24 @@ def main():
     Rt_values = calculate_Rt(idxstats.values, total_ref, total_map)
 
     # Calculate Rx
-    copy = list(set(list(np.delete(Rt_values, scaffold_ids.index(args.x_id))) + list(np.delete(Rt_values, scaffold_ids.index(args.y_id)))))
+    # Get the index of the X chromosome
+    x_index = scaffold_ids.index(args.x_id)
+    # Get the index of the Y chromosome
+    y_index = scaffold_ids.index(args.y_id)
+
+    # Remove the x and y chromosomes from the Rt values
+    copy = [Rt_values[x] for x in range(len(list(Rt_values))) if x != x_index and x != y_index]
+
     tot = Rt_values[scaffold_ids.index(args.x_id)] / copy
+
     Rx = np.mean(tot)
-    print("Rx:", np.round(Rx, 3))
+    print(f"Rx: {np.round(Rx, 4)}")
 
     # Calculate confidence interval for Rx
     conf_interval = (np.std(tot) / np.sqrt(22)) * 1.96
     CI1 = Rx - conf_interval
     CI2 = Rx + conf_interval
-    print("95% CI:", np.round(CI1, 3), np.round(CI2, 3))
+    print(f"95% CI: {np.round(CI1, 3)} {np.round(CI2, 3)} \n")
 
     # Calculate Ry
     tot = Rt_values[scaffold_ids.index(args.y_id)] / copy
@@ -85,7 +98,8 @@ def main():
 
 
 
-
+if __name__ == "__main__":
+    main()
 
 
 
